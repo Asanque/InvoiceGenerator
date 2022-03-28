@@ -1,0 +1,10 @@
+﻿@model HaviSzamla.Shop
+@{
+    ViewData["Title"] = $"Shop {Model.ShopNumber}";
+}
+
+<div><p>@Model.GetShopData()</p></div>
+<div>@Model.GetItemsData()</div>
+
+
+
