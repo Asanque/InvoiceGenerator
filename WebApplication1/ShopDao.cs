@@ -27,7 +27,12 @@ namespace HaviSzamla
             return data.First(shop => shop.ShopNumber == id);
         }
 
-        public void AddItem(int id, string itemName, string unit, string price, string key, int amount)
+        public List<int> GetShopIds()
+        {
+            return data.Select(shop => shop.ShopNumber).ToList();
+        }
+
+        public void AddItem(int id, string itemName, string unit, string price, string key, decimal amount)
         {
 
             var currentShop = GetShopToAdd(id);

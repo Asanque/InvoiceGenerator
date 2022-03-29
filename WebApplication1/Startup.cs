@@ -1,4 +1,6 @@
-﻿namespace HaviSzamla
+﻿using System.Globalization;
+
+namespace HaviSzamla
 {
     public class Startup
     {
@@ -49,18 +51,19 @@
         private void SetupInMemoryDatabases()
         {
             int monthNum = 1;
-            string month = new DateTime(1, monthNum, 1).ToString("MMMM");
+            string month = new DateTime(1, monthNum, 1).ToString("MMMM", new CultureInfo("hu-HU"));
             ShopData.SetInstance(month, 5);
             var shopDao = ShopDao.GetInstance();
             
             shopDao.AddItem(0, "Kremes", "ft/db", "300", "week1", 5);
-            shopDao.AddItem(1, "Kremes", "ft/db", "300", "week1", 5);
-            shopDao.AddItem(1, "asd", "ft/db", "300", "week1", 5);
-            shopDao.AddItem(1, "asd", "ft/db", "300", "week3", 5);
+            shopDao.AddItem(1, "Kremes", "ft/db", "300", "week1", 5.4m);
+            shopDao.AddItem(1, "test", "ft/db", "300", "week1", 5);
+            shopDao.AddItem(1, "test", "ft/db", "300", "week3", 5);
 
             foreach (var shop in shopDao.data)
             {
                 shop.AddTotalToItems();
+                shop.SetTotals();
             }
 
         }

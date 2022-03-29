@@ -3,8 +3,124 @@
     ViewData["Title"] = $"Shop {Model.ShopNumber}";
 }
 
-<div><p>@Model.GetShopData()</p></div>
-<div>@Model.GetItemsData()</div>
+<p style="font-size: 25px;position: relative;text-align: right">Név: @Model.ShopName
+    <br>Cím: @Model.ShopAddress
+    <br>Adószám: @Model.ShopVatNumber
+    <br> @Model.Month havi összesítő</p>
+<table>
+    <tr style="font-weight: bold; font-size: large">
+        <td style="padding: 0 100px">Terméknev</td>
+        <td style="padding: 0 25px">Ár</td>
+        <td style="padding: 0 25px">Egység</td>
+        @for (int i = 1; i<= Model.WeeksInMonth; i++)
+        {
+            <td style="padding: 0 10px">Het @i</td>
+        }
+        <td>Összesen</td>
+    </tr>
+    @{
+        int index = 0;
+    }
+    @foreach (var key in Model.DictOfItems.Keys)
+    {
 
+
+        string background = string.Empty;
+        if (index % 2 == 0)
+        {
+            background = "background: lightgray";
+        }
+        
+        
+        <tr style="text-align: center; @background">@{
+                
+        <td>@key</td>;
+        @foreach (var itemKey in Model.DictOfItems[key].Keys)
+        {
+            if (Model.DictOfItems[key][itemKey] is not "0")
+            {
+                <td>@Model.DictOfItems[key][itemKey]</td>;
+            }
+            else
+            {
+                <td>@string.Empty</td>;
+            }
+        }        
+            }
+        </tr>
+        index++;       
+    }
+    <tr style="font-weight: bold; text-align: center"><td style="padding: 20px 0 0 0">heti osszesen</td><td></td><td></td>
+        @foreach (var item in Model.TotalPerWeek)
+        {
+            <td style="padding: 20px 0 0 0">@item</td>
+        }
+        </tr>
+</table>
+<p style="font-size: 25px; position: relative;text-align: right">havi összesen <strong>@Model.TotalInMonth Ft</strong></p>
+
+    @*{% if loop.index % 2 == 0 %}
+        <tr style="text-align: center; background: lightgray">
+    {% else %}
+        <tr style="text-align: center">
+    {% endif %}
+        <td>{{elements.name}}</td>
+        <td>{{elements.ar}}</td>
+        <td>{{elements.egyseg}}</td>
+        {% if elements.het1 != 0 %}
+            <td>{{elements.het1}}</td>
+        {% else %}
+            <td></td>
+        {% endif %}
+        {% if elements.het2 != 0 %}
+            <td>{{elements.het2}}</td>
+        {% else %}
+            <td></td>
+        {% endif %}
+        {% if elements.het3 != 0 %}
+            <td>{{elements.het3}}</td>
+        {% else %}
+            <td></td>
+        {% endif %}
+        {% if elements.het4 != 0 %}
+            <td>{{elements.het4}}</td>
+        {% else %}
+            <td></td>
+        {% endif %}
+        {% if hetek >= 5 %}
+            {% if elements.het5 != 0 %}
+                <td>{{elements.het5}}</td>
+            {% else %}
+                <td></td>
+            {% endif %}
+        {% endif %}
+
+        {% if hetek >= 6%}
+            {% if elements.het6 != 0 %}
+                <td>{{elements.het6}}</td>
+            {% else %}
+                <td></td>
+            {% endif %}
+        {% endif %}
+        <td>{{ elements.osszesen }}</td>
+    </tr>
+    {% endfor %}
+    <tr style="font-weight: bold; text-align: center">
+        <td style="padding: 20px 0 0 0">heti osszesen</td>
+        <td></td>
+        <td></td>
+        <td style="padding: 20px 0 0 0">{{weekly_amount[0]}} Ft</td>
+        <td style="padding: 20px 0 0 0">{{weekly_amount[1]}} Ft</td>
+        <td style="padding: 20px 0 0 0">{{weekly_amount[2]}} Ft</td>
+        <td style="padding: 20px 0 0 0">{{weekly_amount[3]}} Ft</td>
+        {% if hetek >= 5 %}
+            <td style="padding: 20px 0 0 0">{{weekly_amount[4]}} Ft</td>
+        {% endif %}
+        {% if hetek >= 6 %}
+            <td style="padding: 20px 0 0 0">{{weekly_amount[5]}} Ft</td>
+        {% endif %}
+    </tr>
+</table>*@
+@*<p style="font-size: 25px; position: relative;text-align: right">havi osszesen <strong>{{havi_osszeg}} Ft</strong></p>*@
 
 

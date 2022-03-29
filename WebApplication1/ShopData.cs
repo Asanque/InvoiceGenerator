@@ -5,8 +5,8 @@ namespace HaviSzamla
     public class ShopData
     {
         public static List<string> ShopNameList { get; } = new () {"name1", "name2"};
-        public static List<string> ShopAddressList { get; } = new () {"name1", "name2"};
-        public static List<string> ShopVatsList { get; } = new () {"name1", "name2"};
+        public static List<string> ShopAddressList { get; } = new () {"Address1", "Address2"};
+        public static List<string> ShopVatsList { get; } = new () {"12345", "45678"};
 
         public string Month { get; }
         public int WeeksInMonth { get; }

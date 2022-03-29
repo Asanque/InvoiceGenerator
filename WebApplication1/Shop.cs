@@ -4,22 +4,25 @@ namespace HaviSzamla
     public class Shop
     {
         public int ShopNumber { get; }
-        private readonly string _month;
+        public string Month { get; }
         public int WeeksInMonth { get; }
         public Dictionary<string, Dictionary<string, string>> DictOfItems { get; }
-        private readonly string _shopName;
-        private readonly string _shopVatNumber;
-        private readonly string _shopAddress;
+        public List<int> TotalPerWeek { get; }
+        public int TotalInMonth { get; private set; }
+        public string ShopName { get; }
+        public string ShopVatNumber { get; }
+        public string ShopAddress { get; }
 
-        public Shop(string month, string shopName, string shopVatNumber, string shopAddress, int weeksInMonth, int shopNumber)
+        public Shop(string month, string shopName, string shopAddress, string shopVatNumber, int weeksInMonth, int shopNumber)
         {
             ShopNumber = shopNumber;
-            _shopName = shopName;
-            _shopVatNumber = shopVatNumber;
-            _shopAddress = shopAddress;
+            ShopName = shopName;
+            ShopVatNumber = shopVatNumber;
+            ShopAddress = shopAddress;
             WeeksInMonth = weeksInMonth;
             DictOfItems = new Dictionary<string, Dictionary<string, string>>();
-            _month = month;
+            Month = month;
+            TotalPerWeek = new List<int>();
         }
 
         public void AddItemToDict(string itemName, string unit, string price)
@@ -27,17 +30,17 @@ namespace HaviSzamla
             var newDict = new Dictionary<string, string>();
             newDict.Add("unit", unit);
             newDict.Add("price", price);
-            newDict.Add("total", "0");
             for (int i = 1; i <= WeeksInMonth; i++)
             {
                 newDict.Add($"week{i}", "0");
             }
+            newDict.Add("total", "0");
             DictOfItems.Add(itemName, newDict);
         }
 
-        public void AddValueToItem(string itemName, string key, int amount)
+        public void AddValueToItem(string itemName, string key, decimal amount)
         {
-            DictOfItems[itemName][key] = (int.Parse(DictOfItems[itemName][key]) + amount).ToString();
+            DictOfItems[itemName][key] = (decimal.Parse(DictOfItems[itemName][key]) + amount).ToString();
         }
 
         public bool CheckItemInList(string itemName)
@@ -53,41 +56,27 @@ namespace HaviSzamla
         {
             foreach (string itemName in DictOfItems.Keys)
             {
-                int total = 0;
+                decimal total = 0;
                 for (int i = 1; i <= WeeksInMonth; i++)
                 {
-                    total += int.Parse(DictOfItems[itemName][$"week{i}"]);
+                    total += decimal.Parse(DictOfItems[itemName][$"week{i}"]);
                 }
                 AddValueToItem(itemName, "total", total);
             }
         }
 
-        public string GetShopData()
+        public void SetTotals()
         {
-            return $"{_shopName}\n{_shopAddress}\n{_shopVatNumber}\n{_month}";
-        }
-
-        public string GetItemsData()
-        {
-            string data = string.Empty;
-            int count = 0;
-            foreach (string itemName in DictOfItems.Keys)
+            for (int i = 1; i <= WeeksInMonth; i++)
             {
-                if (count != 0)
+                int currentTotal = 0;
+                foreach (string itemName in DictOfItems.Keys)
                 {
-                    data += "\n";
+                    currentTotal += (int)(decimal.Parse(DictOfItems[itemName][$"week{i}"]) * int.Parse(DictOfItems[itemName]["price"]));
                 }
-                data += itemName;
-                data += DictOfItems[itemName]["unit"];
-                data += DictOfItems[itemName]["price"];
-                for (int i = 1; i <= WeeksInMonth; i++)
-                {
-                    data += DictOfItems[itemName][$"week{i}"];
-                }
-                data += DictOfItems[itemName]["total"];
-                count++;
+                TotalPerWeek.Add(currentTotal);
             }
-            return data;
+            TotalInMonth = TotalPerWeek.Sum();
         }
     }
 }

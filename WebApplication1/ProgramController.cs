@@ -18,7 +18,8 @@
 
         public IActionResult Index()
         {
-            return View();
+            var shopIds = _shopDao.GetShopIds();
+            return View(shopIds);
         }
 
         [Route("/shop/{id}")]
