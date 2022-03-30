@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using ClosedXML.Excel;
+using System.Globalization;
 
 namespace HaviSzamla
 {
@@ -50,15 +51,33 @@ namespace HaviSzamla
 
         private void SetupInMemoryDatabases()
         {
-            int monthNum = 1;
+            string Mysheet = @"C:\Users\kisge\Desktop\testExcel.xlsm";
+            var workbook = new XLWorkbook(Mysheet);
+            var szamla = workbook.Worksheet("haviszla");
+
+            int monthNum = Convert.ToInt32(szamla.Row(2).Cell(10).Value);
+            int weeksInMonth = Convert.ToInt32(szamla.Row(2).Cell(11).Value);
             string month = new DateTime(1, monthNum, 1).ToString("MMMM", new CultureInfo("hu-HU"));
-            ShopData.SetInstance(month, 5);
+            ShopData.SetInstance(month, weeksInMonth);
             var shopDao = ShopDao.GetInstance();
-            
-            shopDao.AddItem(0, "Kremes", "ft/db", "300", "week1", 5);
-            shopDao.AddItem(1, "Kremes", "ft/db", "300", "week1", 5.4m);
-            shopDao.AddItem(1, "test", "ft/db", "300", "week1", 5);
-            shopDao.AddItem(1, "test", "ft/db", "300", "week3", 5);
+            int count = 0;
+            foreach (var row in szamla.Rows())
+            {
+                if (count > 3)
+                {
+                    if (row.Cell(1).Value.ToString() == "")
+                    { break; }
+                    int shopNum = Convert.ToInt32(row.Cell(1).Value);
+                    string itemName = row.Cell(2).Value.ToString();
+                    string unit = row.Cell(5).Value.ToString();
+                    string price = row.Cell(4).Value.ToString();
+                    string weekNum = "week" + row.Cell(6).Value.ToString();
+                    decimal amount = Convert.ToDecimal(row.Cell(3).Value);
+                    shopDao.AddItem(shopNum, itemName, unit, price, weekNum, amount);
+                }
+                
+                count++;
+            }
 
             foreach (var shop in shopDao.data)
             {
