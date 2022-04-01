@@ -6,7 +6,7 @@ namespace HaviSzamla
         public int ShopNumber { get; }
         public string Month { get; }
         public int WeeksInMonth { get; }
-        public Dictionary<string, Dictionary<string, string>> DictOfItems { get; }
+        public List<Product> ListOfItems { get; }
         public List<int> TotalPerWeek { get; }
         public int TotalInMonth { get; private set; }
         public string ShopName { get; }
@@ -20,59 +20,44 @@ namespace HaviSzamla
             ShopVatNumber = shopVatNumber;
             ShopAddress = shopAddress;
             WeeksInMonth = weeksInMonth;
-            DictOfItems = new Dictionary<string, Dictionary<string, string>>();
+            ListOfItems = new List<Product>();
             Month = month;
             TotalPerWeek = new List<int>();
         }
 
-        public void AddItemToDict(string itemName, string unit, string price)
+        public void AddItemToList(string itemName, string unit, int price)
         {
-            var newDict = new Dictionary<string, string>();
-            newDict.Add("unit", unit);
-            newDict.Add("price", price);
-            for (int i = 1; i <= WeeksInMonth; i++)
-            {
-                newDict.Add($"week{i}", "0");
-            }
-            newDict.Add("total", "0");
-            DictOfItems.Add(itemName, newDict);
+            ListOfItems.Add(new Product(itemName, unit, price, WeeksInMonth));
         }
 
-        public void AddValueToItem(string itemName, string key, decimal amount)
+        public void AddValueToItem(string itemName, int weekNum, decimal amount)
         {
-            DictOfItems[itemName][key] = (decimal.Parse(DictOfItems[itemName][key]) + amount).ToString();
+            Product product = ListOfItems.First(product => product.Name == itemName);
+            product.AmountPerWeek[weekNum-1] += amount;
+            //DictOfItems[itemName][key] = (decimal.Parse(DictOfItems[itemName][key]) + amount).ToString();
         }
 
         public bool CheckItemInList(string itemName)
         {
-            if (DictOfItems.ContainsKey(itemName))
-            {
-                return true;
-            }
-            return false;
+            return ListOfItems.Where(product => product.Name.Equals(itemName)).Any();
         }
 
         public void AddTotalToItems()
         {
-            foreach (string itemName in DictOfItems.Keys)
+            foreach (Product product in ListOfItems)
             {
-                decimal total = 0;
-                for (int i = 1; i <= WeeksInMonth; i++)
-                {
-                    total += decimal.Parse(DictOfItems[itemName][$"week{i}"]);
-                }
-                AddValueToItem(itemName, "total", total);
+                product.TotalInMonth = product.AmountPerWeek.Sum();
             }
         }
 
         public void SetTotals()
         {
-            for (int i = 1; i <= WeeksInMonth; i++)
+            for (int i = 0; i < WeeksInMonth; i++)
             {
                 int currentTotal = 0;
-                foreach (string itemName in DictOfItems.Keys)
+                foreach (Product product in ListOfItems)
                 {
-                    currentTotal += (int)(decimal.Parse(DictOfItems[itemName][$"week{i}"]) * int.Parse(DictOfItems[itemName]["price"]));
+                    currentTotal += (int)(product.AmountPerWeek[i] * product.Price);
                 }
                 TotalPerWeek.Add(currentTotal);
             }

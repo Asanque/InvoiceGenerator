@@ -32,13 +32,13 @@ namespace HaviSzamla
             return data.Select(shop => shop.ShopNumber).ToList();
         }
 
-        public void AddItem(int id, string itemName, string unit, string price, string key, decimal amount)
+        public void AddItem(int id, string itemName, string unit, int price, int key, decimal amount)
         {
 
             var currentShop = GetShopToAdd(id);
             if (!currentShop.CheckItemInList(itemName))
             {
-                currentShop.AddItemToDict(itemName, unit, price);
+                currentShop.AddItemToList(itemName, unit, price);
             }
             currentShop.AddValueToItem(itemName, key, amount);
         }
@@ -53,7 +53,7 @@ namespace HaviSzamla
             {
                 var name = ShopData.ShopNameList[id];
                 var address = ShopData.ShopAddressList[id];
-                var vat = ShopData.ShopVatsList[id];
+                var vat = ShopData.ShopVatList[id];
                 var newShop = new Shop(shopData.Month, name, address, vat, shopData.WeeksInMonth, id);
                 data.Add(newShop);
                 return newShop;
