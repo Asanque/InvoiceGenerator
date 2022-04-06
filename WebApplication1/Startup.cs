@@ -5,6 +5,15 @@ namespace HaviSzamla
 {
     public class Startup
     {
+        private const int ShopNumberCol = 1;
+        private const int ProductCol = 2;
+        private const int AmountCol = 3;
+        private const int PriceCol = 4;
+        private const int UnitCol = 5;
+        private const int WeekNumCol = 6;
+        private const int NameCol = 1;
+        private const int AddressCol = 2;
+        private const int VatCol = 3;
         private ShopData shopData;
         public Startup(IConfiguration configuration)
         {
@@ -52,48 +61,39 @@ namespace HaviSzamla
 
         private void SetupInMemoryDatabases()
         {
-            string sheetLocation = string.Empty;
-            try { sheetLocation = File.ReadAllText(@"DocLocation.txt"); }
-            catch {
-                Console.WriteLine("DocLocation.txt nem található.");
-                Console.ReadLine();
-            }
-            XLWorkbook workbook = default;
-            try
-            {
-                workbook = new XLWorkbook(sheetLocation);
-
-            }
-            catch
-            {   
-                Console.WriteLine("A megadott dokumentum nem található");
-                Console.ReadLine();
-            }
-            var sheet = workbook.Worksheet("haviszla");
+            
+            var sheetLocation = GetLocation();
+            var workbook = GetWorkbook(sheetLocation);
+            var sheet = GetSheet(workbook, "haviszla");
 
             int monthNum = Convert.ToInt32(sheet.Row(2).Cell(10).Value);
             int weeksInMonth = Convert.ToInt32(sheet.Row(2).Cell(11).Value);
             string month = new DateTime(1, monthNum, 1).ToString("MMMM", new CultureInfo("hu-HU"));
             ShopData.SetInstance(month, weeksInMonth);
             shopData = ShopData.GetInstance();
-            LoadShopData(workbook.Worksheet("adatok"));
+            LoadShopData(GetSheet(workbook, "adatok"));
+            LoadProductData(sheet);
+        }
+
+        private void LoadProductData(IXLWorksheet sheet)
+        {
             var shopDao = ShopDao.GetInstance();
             int count = 0;
             foreach (var row in sheet.Rows())
             {
                 if (count > 1)
                 {
-                    if (row.Cell(1).Value.ToString() == "")
+                    if (row.Cell(ShopNumberCol).Value.ToString() == "")
                     { break; }
-                    int shopNum = Convert.ToInt32(row.Cell(1).Value);
-                    string itemName = row.Cell(2).Value.ToString();
-                    decimal amount = Convert.ToDecimal(row.Cell(3).Value);
-                    int price = Convert.ToInt32(row.Cell(4).Value);
-                    string unit = row.Cell(5).Value.ToString();
-                    int weekNum = Convert.ToInt32(row.Cell(6).Value);
-                    shopDao.AddItem(shopNum, itemName, unit, price, weekNum, amount);
+                    int shopNum = Convert.ToInt32(row.Cell(ShopNumberCol).Value);
+                    string productName = row.Cell(ProductCol).Value.ToString();
+                    decimal amount = Convert.ToDecimal(row.Cell(AmountCol).Value);
+                    int price = Convert.ToInt32(row.Cell(PriceCol).Value);
+                    string unit = row.Cell(UnitCol).Value.ToString();
+                    int weekNum = Convert.ToInt32(row.Cell(WeekNumCol).Value);
+                    shopDao.AddItem(shopNum, productName, unit, price, weekNum, amount);
                 }
-                
+
                 count++;
             }
 
@@ -102,18 +102,54 @@ namespace HaviSzamla
                 shop.AddTotalToItems();
                 shop.SetTotals();
             }
-            Console.WriteLine("You can now open the webpage");
+        }
+
+        private string GetLocation()
+        {
+            try 
+            { 
+                return File.ReadAllText(@"DocLocation.txt");
+            }
+            catch
+            {
+                throw new Exception("DocLocation.txt nem található.");
+            }
+        }
+
+        private XLWorkbook GetWorkbook(string location)
+        {
+            try
+            {
+                return new XLWorkbook(location);
+
+            }
+            catch
+            {
+                throw new Exception("A megadott dokumentum nem található, vagy már meg van nyitva");
+            }
+        }
+
+        private IXLWorksheet GetSheet(XLWorkbook workbook, string sheetName)
+        {
+            try
+            {
+                return workbook.Worksheet(sheetName);
+            }
+            catch
+            {
+                throw new Exception("A megadott lap nem található");
+            }
         }
 
         private void LoadShopData(IXLWorksheet shopDataSheet)
         {
             foreach (var row in shopDataSheet.Rows())
             {
-                if (row.Cell(1).Value.ToString() == "")
+                if (row.Cell(NameCol).Value.ToString() == "")
                 { break; }
-                shopData.AddToNameList(row.Cell(1).Value.ToString());
-                shopData.AddToAddressList(row.Cell(2).Value.ToString());
-                shopData.AddToVatList(row.Cell(3).Value.ToString());
+                shopData.AddToNameList(row.Cell(NameCol).Value.ToString());
+                shopData.AddToAddressList(row.Cell(AddressCol).Value.ToString());
+                shopData.AddToVatList(row.Cell(VatCol).Value.ToString());
             }
         }
     }
