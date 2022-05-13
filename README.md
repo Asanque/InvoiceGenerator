@@ -24,9 +24,23 @@ This is an application to turn a database containing daily data into a format th
 - The data is dynamicly converted, does not leave space if the month is only 4 weeks long
 
 # Screenshots
-https://imgur.com/a/kmI61eP
-![test](https://imgur.com/1NBRhJk)
+sample data:
+![App Screenshot](https://github.com/Asanque/Szamlazo/blob/main/1NBRhJk.png)
+converted into monthly data:
 
+![App Screenshot](https://github.com/Asanque/Szamlazo/blob/main/5QQHZe4.png)
+
+Link to selected shop's page in browser:
+
+![App Screenshot](https://github.com/Asanque/Szamlazo/blob/main/QxzWKKU.png)
+
+Sample page with 1 week:
+
+![App Screenshot](https://github.com/Asanque/Szamlazo/blob/main/3l4A17B.png)
+
+Sample page with 5 week:
+
+![App Screenshot](https://github.com/Asanque/Szamlazo/blob/main/VZyGvjs.png)
 
 # Install
 ``` sh
