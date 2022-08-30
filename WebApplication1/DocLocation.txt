@@ -1,1 +1,1 @@
-bin/Release/net6.0/test.xlsm
+C:\Users\Kis Gergely\OneDrive\Desktop\Codecool\SajátProject\Szamlazo\WebApplication1\obj\Release\net6.0\test.xlsm
