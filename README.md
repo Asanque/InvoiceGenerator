@@ -1,5 +1,7 @@
 <div align="center">
+  
 # Számlázó
+  
 </div>
 
 
@@ -47,4 +49,4 @@ Sample page with 5 week:
 git clone git@github.com:Asanque/Szamlazo.git
 ```
 
-After the repository is successfully cloned 
+After the repository is successfully cloned run the "start.bat" file.
