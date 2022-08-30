@@ -27,14 +27,21 @@ namespace HaviSzamla
 
         public void AddItemToList(string itemName, string unit, int price)
         {
+            if (itemName == null || unit == null || price == null)
+            {
+                throw new ArgumentNullException();
+            }
             ListOfItems.Add(new Product(itemName, unit, price, WeeksInMonth));
         }
 
         public void AddValueToItem(string itemName, int weekNum, decimal amount)
         {
+            if (itemName == null || weekNum == null || amount == null)
+            {
+                throw new ArgumentNullException();
+            }
             Product product = ListOfItems.First(product => product.Name == itemName);
             product.AmountPerWeek[weekNum-1] += amount;
-            //DictOfItems[itemName][key] = (decimal.Parse(DictOfItems[itemName][key]) + amount).ToString();
         }
 
         public bool CheckItemInList(string itemName)
