@@ -10,10 +10,10 @@
     
     public class SzamlazoController : Controller
     {
-        private ShopDao _shopDao;
-        public SzamlazoController()
+        private IShopDao _shopDao;
+        public SzamlazoController(IShopDao shopDao)
         {
-            _shopDao = ShopDao.GetInstance();
+            _shopDao = shopDao;
         }
 
         public IActionResult Index()

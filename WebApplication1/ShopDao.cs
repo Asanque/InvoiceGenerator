@@ -2,37 +2,28 @@
 
 namespace HaviSzamla
 {
-    public class ShopDao
+    public class ShopDao : IShopDao
     {
-        public List<Shop> data = new List<Shop>();
-        private static ShopDao instance = null;
-        private ShopData shopData;
+        public List<Shop> Data { get; } = new List<Shop>();
+        private IShopData shopData;
 
-        private ShopDao()
+        public ShopDao(IShopData shopData)
         {
-            shopData = ShopData.GetInstance();
+            this.shopData = shopData;
         }
-
-        public static ShopDao GetInstance()
-        {
-            if (instance == null)
-            {
-                instance = new ShopDao();
-            }
-            return instance;
-        }
+        
 
         public Shop GetShop(int id)
         {
-            return data.First(shop => shop.ShopNumber == id);
+            return Data.First(shop => shop.ShopNumber == id);
         }
 
         public List<int> GetShopIds()
         {
-            return data.Select(shop => shop.ShopNumber).ToList();
+            return Data.Select(shop => shop.ShopNumber).ToList();
         }
 
-        public void AddItem(int id, string itemName, string unit, int price, int key, decimal amount)
+        public void AddItem(int id, string itemName, string unit, int price, int weekNum, decimal amount)
         {
 
             var currentShop = GetShopToAdd(id);
@@ -40,7 +31,7 @@ namespace HaviSzamla
             {
                 currentShop.AddItemToList(itemName, unit, price);
             }
-            currentShop.AddValueToItem(itemName, key, amount);
+            currentShop.AddValueToItem(itemName, weekNum, amount);
         }
 
         private Shop GetShopToAdd(int id)
@@ -51,13 +42,18 @@ namespace HaviSzamla
             }
             catch
             {
-                var name = ShopData.ShopNameList[id];
-                var address = ShopData.ShopAddressList[id];
-                var vat = ShopData.ShopVatList[id];
-                var newShop = new Shop(shopData.Month, name, address, vat, shopData.WeeksInMonth, id);
-                data.Add(newShop);
-                return newShop;
+                return CreateShop(id);
             }
+        }
+
+        public Shop CreateShop(int id)
+        {
+            var name = ShopData.ShopNameList[id];
+            var address = ShopData.ShopAddressList[id];
+            var vat = ShopData.ShopVatList[id];
+            var newShop = new Shop(shopData.Month, name, address, vat, shopData.WeeksInMonth, id);
+            Data.Add(newShop);
+            return newShop;
         }
     }
 }

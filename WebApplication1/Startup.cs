@@ -14,7 +14,9 @@ namespace HaviSzamla
         private const int NameCol = 1;
         private const int AddressCol = 2;
         private const int VatCol = 3;
-        private ShopData shopData;
+        private IShopData shopData;
+        private IShopDao shopDao;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -26,6 +28,7 @@ namespace HaviSzamla
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            SetupDependency(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,11 +58,18 @@ namespace HaviSzamla
                     name: "default",
                     pattern: "{controller=Szamlazo}/{action=Index}/{id?}");
             });
-
-            SetupInMemoryDatabases();
+            shopData = app.ApplicationServices.GetRequiredService<IShopData>();
+            shopDao = app.ApplicationServices.GetRequiredService<IShopDao>();
+            SetupInMemoryDatabases(shopData, shopDao);
         }
 
-        private void SetupInMemoryDatabases()
+        public void SetupDependency(IServiceCollection services)
+        {
+            services.AddSingleton<IShopData, ShopData>();
+            services.AddSingleton<IShopDao, ShopDao>();
+        }
+
+        private void SetupInMemoryDatabases(IShopData shopData, IShopDao shopDao)
         {
             
             var sheetLocation = GetLocation();
@@ -69,19 +79,20 @@ namespace HaviSzamla
             int monthNum = Convert.ToInt32(sheet.Row(2).Cell(10).Value);
             int weeksInMonth = Convert.ToInt32(sheet.Row(2).Cell(11).Value);
             string month = new DateTime(1, monthNum, 1).ToString("MMMM", new CultureInfo("hu-HU"));
-            ShopData.SetInstance(month, weeksInMonth);
-            shopData = ShopData.GetInstance();
+            shopData.Month = month;
+            shopData.WeeksInMonth = weeksInMonth;
+            
             LoadShopData(GetSheet(workbook, "adatok"));
-            LoadProductData(sheet);
+            LoadProductData(sheet, shopDao);
         }
 
-        private void LoadProductData(IXLWorksheet sheet)
+        private void LoadProductData(IXLWorksheet sheet, IShopDao shopDao)
         {
-            var shopDao = ShopDao.GetInstance();
+            
             int count = 0;
             foreach (var row in sheet.Rows())
             {
-                if (count > 1)
+                if (count > 2)
                 {
                     if (row.Cell(ShopNumberCol).Value.ToString() == "")
                     { break; }
@@ -97,7 +108,7 @@ namespace HaviSzamla
                 count++;
             }
 
-            foreach (var shop in shopDao.data)
+            foreach (var shop in shopDao.Data)
             {
                 shop.AddTotalToItems();
                 shop.SetTotals();
