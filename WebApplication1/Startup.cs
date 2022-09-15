@@ -94,13 +94,13 @@ namespace HaviSzamla
             {
                 if (count > 2)
                 {
-                    if (row.Cell(ShopNumberCol).Value.ToString() == "")
+                    if (row.Cell(ShopNumberCol).Value.ToString() == string.Empty)
                     { break; }
                     int shopNum = Convert.ToInt32(row.Cell(ShopNumberCol).Value);
-                    string productName = row.Cell(ProductCol).Value.ToString();
+                    string? productName = row.Cell(ProductCol).Value.ToString();
                     decimal amount = Convert.ToDecimal(row.Cell(AmountCol).Value);
                     int price = Convert.ToInt32(row.Cell(PriceCol).Value);
-                    string unit = row.Cell(UnitCol).Value.ToString();
+                    string? unit = row.Cell(UnitCol).Value.ToString();
                     int weekNum = Convert.ToInt32(row.Cell(WeekNumCol).Value);
                     shopDao.AddItem(shopNum, productName, unit, price, weekNum, amount);
                 }
