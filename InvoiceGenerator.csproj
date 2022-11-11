@@ -7,10 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="SzamlazoTest\**" />
-    <Content Remove="SzamlazoTest\**" />
-    <EmbeddedResource Remove="SzamlazoTest\**" />
-    <None Remove="SzamlazoTest\**" />
+    <Compile Remove="InvoiceGeneratorTest\**" />
+    <Content Remove="InvoiceGeneratorTest\**" />
+    <EmbeddedResource Remove="InvoiceGeneratorTest\**" />
+    <None Remove="InvoiceGeneratorTest\**" />
   </ItemGroup>
 
 
