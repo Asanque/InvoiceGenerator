@@ -1,0 +1,11 @@
+﻿@model List<int>
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    @foreach (var shopID in Model)
+    {
+        <a href="/shop/@shopID">Bolt @shopID</a><br>
+    }
+</div>
