@@ -27,22 +27,22 @@ This is an application to turn a database containing daily data into a format th
 
 # Screenshots
 sample data:
-![App Screenshot](https://github.com/Asanque/Szamlazo/blob/main/1NBRhJk.png)
+![App Screenshot](https://github.com/Asanque/Szamlazo/blob/main/SamplePictures/1NBRhJk.png)
 converted into monthly data:
 
-![App Screenshot](https://github.com/Asanque/Szamlazo/blob/main/5QQHZe4.png)
+![App Screenshot](https://github.com/Asanque/Szamlazo/blob/main/SamplePictures/5QQHZe4.png)
 
 Link to selected shop's page in browser:
 
-![App Screenshot](https://github.com/Asanque/Szamlazo/blob/main/QxzWKKU.png)
+![App Screenshot](https://github.com/Asanque/Szamlazo/blob/main/SamplePictures/QxzWKKU.png)
 
 Sample page with 1 week:
 
-![App Screenshot](https://github.com/Asanque/Szamlazo/blob/main/3l4A17B.png)
+![App Screenshot](https://github.com/Asanque/Szamlazo/blob/main/SamplePictures/3l4A17B.png)
 
 Sample page with 5 week:
 
-![App Screenshot](https://github.com/Asanque/Szamlazo/blob/main/VZyGvjs.png)
+![App Screenshot](https://github.com/Asanque/Szamlazo/blob/main/SamplePictures/VZyGvjs.png)
 
 # Install
 [Download from here](https://drive.google.com/file/d/1EaieZVjUJvVoLZf7epdev7XU-JlQZ4-G/view?usp=share_link)
