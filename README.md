@@ -45,8 +45,6 @@ Sample page with 5 week:
 ![App Screenshot](https://github.com/Asanque/Szamlazo/blob/main/VZyGvjs.png)
 
 # Install
-``` sh
-git clone git@github.com:Asanque/Szamlazo.git
-```
+[Download from here](https://drive.google.com/file/d/1EaieZVjUJvVoLZf7epdev7XU-JlQZ4-G/view?usp=share_link)
 
-After the repository is successfully cloned run the "start.bat" file.
+After downloaded, extract and run start.bat.
